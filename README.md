@@ -12,7 +12,7 @@ Install
 
 `$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** hoodie.
 
-Initialize hoodie and load the plugin into angular. add the module name `hoodieModule` to your module array. Example:
+Initialize hoodie and load the plugin into angular. add the module name `hoodie` to your module array. Example:
 
 ```js
 // Init Hoodie
@@ -20,13 +20,19 @@ var hoodie  = new Hoodie()
 window.hoodie = hoodie;
 
 // Init Angular
-angular.module('worldDominationApp', ['hoodieModule'])
+angular.module('worldDominationApp', ['hoodie'])
 ```
 
 Services
 --------
 
-There are currently three services. hoodieAccount, hoodieStore and hoodieArray.
+There are currently four services. hoodie, hoodieAccount, hoodieStore and hoodieArray.
+
+### `hoodie`
+
+Use hoodieProvider.url(String) to configure your app's hoodie url at startup.  Scroll down for an example.
+
+You can then inject `hoodie` with dependency injection anywhere to get your plain old hoodie instance.  For more angular-friendly services, use the below.
 
 ### `hoodieAccount`
 
@@ -34,23 +40,26 @@ Use the same [API like plain hoodie](http://hood.ie/#docs). Use dependency Injec
 
 ### `hoodieStore`
 
-Use the same [API like plain hoodie](http://hood.ie/#docs). Use dependency Injection if you want to use this. I recomend
-you to use `hoodieArray`.
+Use the same [API like plain hoodie](http://hood.ie/#docs). Use dependency Injection if you want to use this. We recommend you to use `hoodieArray`.
 
 ### `hoodieArray`
 
-This is real nice. Add `hoodieArray` to your di-array. With the bind method you could bind an array to your hoodie store.
+Add `hoodieArray` to your di-array. With the bind method you could bind an array to your hoodie store.
 
 #### `hoodieArray.bind(scope, store[, hoodieStore])`
 
 * **scope**: the scope to bind with. Normaly `$scope`
 * **store**: the place were the store binds to.
-* **hoodieStore**: Not needed. the store name in hoodie. If unset, store will be used.
+* **hoodieStore**: Optional. the store name in hoodie. If unset, store will be used.
 
 Example:
 
 ```js
-angular.module('worldDominationApp', ['hoodieModule'])
+angular.module('worldDominationApp', ['hoodie'])
+
+.config(function(hoodieProvider) {
+  hoodieProivder.url('http://myhoodie.com/_api');
+})
 
 .controller('TodoCtrl', function ($scope, hoodieArray) {
 
@@ -69,3 +78,22 @@ angular.module('worldDominationApp', ['hoodieModule'])
   hoodieArray.bind($scope, 'todos', 'todo');
 });
 ```
+
+Development
+-----------
+
+We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test, with [bower](http://bower.io) to install test dependencies.  To setup your development environment:
+
+- `grunt`
+- `npm install`
+- `bower install`
+
+Then, run `grunt` to build and test.  Run `grunt dev` to start the test server and test every save.  
+
+### Build & Release Process
+
+Run `grunt release`, which will do the following;
+- `grunt build` to concat the source files and wrap them in Hoodie.extend()
+- Move built file from `dist` to project root , using `grunt shell:release`.  We keep the concatenated file in dist by default so it cannot be accidentally commited.
+- Use `grunt bump` to commit, tag, and publish
+

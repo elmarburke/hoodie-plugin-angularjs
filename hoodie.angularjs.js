@@ -1,152 +1,243 @@
-Hoodie.extend(function (hoodie) {
-  var hoodieModule = angular.module('hoodieModule', []);
+Hoodie.extend(function(hoodie) {
 
-  hoodieModule.service('hoodieAccount', function ($rootScope) {
-    var service = this;
-    this.signUp = hoodie.account.signUp;
-    this.signIn = hoodie.account.signIn;
-    this.signOut = hoodie.account.signOut;
-    this.changePassword = hoodie.account.changePassword;
-    this.changeUsername = hoodie.account.changeUsername;
-    this.resetPassword = hoodie.account.resetPassword;
-    this.destroy = hoodie.account.destroy;
-    $rootScope.username = this.username = hoodie.account.username;
+var hoodieModule = angular.module('hoodie', []);
 
-    // listen for account events
-    // user has signed up (this also triggers the authenticated event, see below)
-    hoodie.account.on('signup', function (user) {
-      $rootScope.$apply(function () {
-        service.username = user;
-        $rootScope.$emit('signup', user);
-      });
+//Takes a callback that takes a single argument,
+//and returns a function that will $evalAsync and call that callack
+//$evalAsync will just make sure we don't have any $apply-conflicts
+function angularDigestFn($rootScope, callback) {
+  return function() {
+    var args = arguments;
+    $rootScope.$evalAsync(function() {
+      callback.apply(null, args);
     });
+  };
+}
 
-    // user has signed in (this also triggers the authenticated event, see below)
-    hoodie.account.on('signin', function (user) {
-      $rootScope.$apply(function () {
-        service.username = user;
-        $rootScope.$emit('signin', user);
-      });
-    });
+//Takes a hoodie event, and will do the following when it fires in addition 
+//to calling the function:
+// 1. call $apply
+// 2. $emit('hoodie:evnetName') on the $rootScope
+function hoodieEventWrap(hoodieInstance, eventName, $rootScope,  fn) {
+  hoodieInstance.on(eventName, angularDigestFn($rootScope, function(eventData) {
+    fn(eventData);
+    $rootScope.$emit('hoodie:' + eventName, eventData);
+  }));
+}
 
-    // user has signed out
-    hoodie.account.on('signout', function (user) {
-      $rootScope.$apply(function () {
-        service.username = user;
-        $rootScope.$emit('signout', user);
-      });
-    });
+//Takes a hoodie function that returns a promise, and returns a function
+//that will call the hoodie function, then take that hoodie promise and
+//instead return a $q-promise and $apply when it returns
+function hoodiePromiseFnWrap(context, fnName, $q, $rootScope) {
+  return function() {
+    var args = arguments;
+    var deferred = $q.defer();
+    context[fnName].apply(context, args).then(
+      angularDigestFn($rootScope, deferred.resolve),
+      angularDigestFn($rootScope, deferred.reject)
+    );
+    return deferred.promise;
+  };
+}
 
-    // user has re-authenticated after their session timed out (this does _not_ trigger the signin event)
-    hoodie.account.on('authenticated', function (user) {
-      $rootScope.$apply(function () {
-        service.username = user;
-        $rootScope.$emit('authenticated', user);
-      });
-    });
 
-    // user's session has timed out. This means the user is still signed in locally, but Hoodie cannot sync remotely, so the user must sign in again
-    hoodie.account.on('unauthenticated', function (user) {
-      $rootScope.$apply(function () {
-        service.username = user;
-        $rootScope.$emit('unauthenticated', user);
-      });
-    });
+hoodieModule.service('hoodieAcount', ['$rootScope', 'hoodie', '$q',
+function($rootScope, hoodie, $q) {
+  var service = this;
 
+  //Wrap hoodie fns to turn hoodie promises into angular
+  angular.forEach([
+    'signUp',
+    'signIn',
+    'signOut',
+    'changePassword',
+    'changeUsername',
+    'resetPassword',
+    'destroy'
+  ], function(fnName) {
+    service[fnName] = hoodiePromiseFnWrap(hoodie.account, fnName, $q, $rootScope);
   });
 
-  hoodieModule.service('hoodieStore', function ($rootScope, $q) {
-    var service = this;
+  // listen for account events
+  angular.forEach([
+    // user has signed up (this also triggers the authenticated event, see below)
+    'signup',
+    // user has signed in (this also triggers the authenticated event, see below)
+    'signin',
+    // user has signed out
+    'signout',
+    // user has re-authenticated after their session timed out 
+    // (this does _not_ trigger the signin event)
+    'authenticated',
+    // user's session has timed out. This means the user is still signed in locally, 
+    // but Hoodie cannot sync remotely, so the user must sign in again
+    'unauthenticated'
+  ], function(eventName) {
+    hoodieEventWrap(hoodie.account, eventName, $rootScope, function(username) {
+      service.username = username;
+    });
+  });
 
-    // add a new object
-    this.add = function (type, attributes) {
-      var deferred = $q.defer();
+  this.username = hoodie.account.username;
+}]);
 
-      hoodie.store.add(type, attributes)
-        .done(function (newObject) {
-          deferred.resolve(newObject);
+hoodieModule.service('hoodieArray', ['$rootScope', 'hoodieStore',
+function($rootScope, hoodieStore) {
+
+  this.bind = function ($scope, key, hoodieKey) {
+
+    hoodieKey = hoodieKey || key;
+
+    $scope.$watch(key, function (newValue, oldValue) {
+      if (newValue === oldValue || !angular.isArray(newValue) || !angular.isArray(oldValue)) {
+        // Init
+        hoodieStore.findAll(hoodieKey)
+        .then(function (data) {
+          $scope[key] = data;
         });
+      } else {
 
-      return deferred.promise;
-    };
+        var delta = getDelta(oldValue, newValue, isEqual);
+        var item;
+        var key;
 
-    // update an existing object
-    this.update = function (type, id, update) {
-      var deferred = $q.defer();
+        // first, add new items
+        for (key in delta.added) {
+          item = delta.added[key];
+          hoodieStore.add(hoodieKey, item);
+        }
 
-      hoodie.store.update(type, id, update)
-        .done(function (updatedObject) {
-          deferred.resolve(updatedObject);
-        });
+        // then, the changed items
+        for (key in delta.changed) {
+          item = delta.changed[key];
+          hoodieStore.update(hoodieKey, item.id, item);
+        }
 
-      return deferred.promise;
-    };
+        // Last, lets delete items
+        for (key in delta.deleted) {
+          item = delta.deleted[key];
+          hoodieStore.remove(hoodieKey, item.id);
+        }
 
-    // find one object
-    this.find = function (type, id) {
-      var deferred = $q.defer();
+      }
+    }, true);
 
-      hoodie.store.find(type, id)
-        .done(function (object) {
-          deferred.resolve(object);
-        });
-
-      return deferred.promise;
-    };
-
-    // Load all objects that belong to the current user
-    // Load all objects of one type, also belonging to the current user
-    // findAll also accepts a function as an argument. If that function returns true for an object in the store, it will be returned. This effectively lets you write complex queries for the store. In this simple example, assume all of our todo tasks have a key "status", and we want to find all unfinished tasks:
-    this.findAll = function (search) {
-      var deferred = $q.defer();
-
-      hoodie.store.findAll(search)
-        .done(function (objects) {
-          deferred.resolve(objects);
-        });
-
-      return deferred.promise;
-    };
-
-    // remove an existing object belonging to the current user
-    this.remove = function (type, id) {
-      var deferred = $q.defer();
-
-      hoodie.store.remove(type, id)
-        .done(function (removedObject) {
-          deferred.resolve(removedObject);
-        });
-
-      return deferred.promise;
-    };
-
-    // Remove all objects of one type, also belonging to the current user
-    // removeAll, like findAll, also accepts a function as an argument. If that function returns true for an object in the store, it will be removed. Assuming all of our todo tasks have a key "status", and we want to remove all completed tasks:
-    this.removeAll = function (type) {
-      var deferred = $q.defer();
-
-      hoodie.store.removeAll(type)
-        .done(function (objects) {
-          deferred.resolve(objects);
-        });
-
-      return deferred.promise;
-    };
-
-    // Make an Array
-
-    service.findAll()
+    hoodie.store.on('change:' + hoodieKey, function (event, changedObject) {
+      hoodieStore.findAll(hoodieKey)
       .then(function (data) {
-        data.forEach(function (item) {
-          var type = item.type;
-          service[type] = service[type] || [];
-          service[type].push(item);
-        });
+        $scope[key] = data;
       });
+    });
 
-    // Events
 
-    hoodie.store.on('change', function (event, changedObject) {
+  };
+}]);
+
+function arrayObjectIndexOf(myArray, searchTerm, property) {
+  for (var i = 0, len = myArray.length; i < len; i++) {
+    if (myArray[i][property] === searchTerm) return i;
+  }
+  return -1;
+}
+
+/**
+ * Creates a map out of an array be choosing what property to key by
+ * @param {object[]} array Array that will be converted into a map
+ * @param {string} prop Name of property to key by
+ * @return {object} The mapped array. Example:
+ *     mapFromArray([{a:1,b:2}, {a:3,b:4}], 'a')
+ *     returns {1: {a:1,b:2}, 3: {a:3,b:4}}
+ */
+function mapFromArray(array, prop) {
+  var map = {};
+  for (var i = 0; i < array.length; i++) {
+    map[ array[i][prop] ] = array[i];
+  }
+  return map;
+}
+
+function isEqual(a, b) {
+  return a.title === b.title && a.type === b.type;
+}
+
+/**
+ * @param {object[]} o old array of objects
+ * @param {object[]} n new array of objects
+ * @param {object} An object with changes
+ */
+function getDelta(o, n, comparator) {
+  var delta = {
+    added: [],
+    deleted: [],
+    changed: []
+  };
+  var mapO = mapFromArray(o, 'id');
+  var mapN = mapFromArray(n, 'id');
+  var id;
+  for (id in mapO) {
+    if (!mapN.hasOwnProperty(id)) {
+      delta.deleted.push(mapO[id]);
+    } else if (!comparator(mapN[id], mapO[id])) {
+      delta.changed.push(mapN[id]);
+    }
+  }
+
+  for (id in mapN) {
+    if (!mapO.hasOwnProperty(id)) {
+      delta.added.push(mapN[id]);
+    }
+  }
+  return delta;
+}
+
+var HOODIE_URL_ERROR = "No url for hoodie set! Please set the hoodie url using hoodieProvider. Example: \n  myApp.config(function(hoodieProvider) {\n    hoodieProvider.url('http://myapp.dev/_api'); });  \n  });";
+hoodieModule.provider('hoodie', [function() {
+  var hoodieUrl;
+  this.url = function(url) {
+    if (arguments.length) {
+      hoodieUrl = url;
+    }
+    return url;
+  };
+
+  this.$get = function() {
+    if (!hoodieUrl) {
+      throw new Error(HOODIE_URL_ERROR);
+    }
+    return new Hoodie(hoodieUrl);
+  };
+
+}]);
+
+
+hoodieModule.service('hoodieStore', ['$rootScope', '$q', 'hoodie', 
+function($rootScope, $q, hoodie) {
+  var service = this;
+
+  angular.forEach([
+    'add',
+    'update',
+    'find',
+    'findAll',
+    'remove',
+    'removeAll'
+  ], function(fnName) {
+    service[fnName] = hoodiePromiseFnWrap(hoodie.store, 'add', $q, $rootScope);
+  });
+
+  service.findAll()
+  .then(function (data) {
+    data.forEach(function (item) {
+      var type = item.type;
+      service[type] = service[type] || [];
+      service[type].push(item);
+    });
+  });
+
+  // write custom wrapper here, it's more complicated
+  // Events
+  hoodie.store.on('change', function (event, changedObject) {
+    $rootScope.$evalAsync(function() {
       var type = changedObject.type;
       var id = changedObject.id;
 
@@ -158,121 +249,12 @@ Hoodie.extend(function (hoodie) {
       $rootScope.$emit('change' + ':' + type + ':' + id, event, changedObject);
 
       service.findAll(type)
-        .then(function (data) {
-          service[type] = data;
-        });
-
-    });
-
-  });
-
-  hoodieModule.service('hoodieArray', function ($rootScope, hoodieStore) {
-    "use strict";
-
-    this.bind = function ($scope, key, hoodieKey) {
-
-      hoodieKey = hoodieKey || key;
-
-      $scope.$watch(key, function (newValue, oldValue) {
-
-        if (newValue === oldValue || !angular.isArray(newValue) || !angular.isArray(oldValue)) {
-          // Init
-          hoodieStore.findAll(hoodieKey)
-            .then(function (data) {
-              $scope[key] = data;
-            });
-        } else {
-
-          var delta = getDelta(oldValue, newValue, isEqual);
-
-          // first, add new items
-          for (var addedIdx in delta.added) {
-            var item = delta.added[addedIdx];
-            hoodieStore.add(hoodieKey, item);
-          }
-
-          // then, the changed items
-          for (var changedIdx in delta.changed) {
-            var item = delta.changed[changedIdx];
-            hoodieStore.update(hoodieKey, item.id, item);
-          }
-
-          // Last, lets delete items
-          for (var deletedIdx in delta.deleted) {
-            var item = delta.deleted[deletedIdx];
-            hoodieStore.remove(hoodieKey, item.id);
-          }
-
-        }
-
-
-      }, true);
-
-      hoodie.store.on('change:' + hoodieKey, function (event, changedObject) {
-        hoodieStore.findAll(hoodieKey)
-          .then(function (data) {
-            $scope[key] = data;
-          });
+      .then(function (data) {
+        service[type] = data;
       });
-
-
-    };
+    });
   });
 
-  function arrayObjectIndexOf(myArray, searchTerm, property) {
-    for (var i = 0, len = myArray.length; i < len; i++) {
-      if (myArray[i][property] === searchTerm) return i;
-    }
-    return -1;
-  }
-
-  /**
-   * Creates a map out of an array be choosing what property to key by
-   * @param {object[]} array Array that will be converted into a map
-   * @param {string} prop Name of property to key by
-   * @return {object} The mapped array. Example:
-   *     mapFromArray([{a:1,b:2}, {a:3,b:4}], 'a')
-   *     returns {1: {a:1,b:2}, 3: {a:3,b:4}}
-   */
-  function mapFromArray(array, prop) {
-    var map = {};
-    for (var i = 0; i < array.length; i++) {
-      map[ array[i][prop] ] = array[i];
-    }
-    return map;
-  }
-
-  function isEqual(a, b) {
-    return a.title === b.title && a.type === b.type;
-  }
-
-  /**
-   * @param {object[]} o old array of objects
-   * @param {object[]} n new array of objects
-   * @param {object} An object with changes
-   */
-  function getDelta(o, n, comparator) {
-    var delta = {
-      added: [],
-      deleted: [],
-      changed: []
-    };
-    var mapO = mapFromArray(o, 'id');
-    var mapN = mapFromArray(n, 'id');
-    for (var id in mapO) {
-      if (!mapN.hasOwnProperty(id)) {
-        delta.deleted.push(mapO[id]);
-      } else if (!comparator(mapN[id], mapO[id])) {
-        delta.changed.push(mapN[id]);
-      }
-    }
-
-    for (var id in mapN) {
-      if (!mapO.hasOwnProperty(id)) {
-        delta.added.push(mapN[id])
-      }
-    }
-    return delta;
-  }
+}]);
 
 });
