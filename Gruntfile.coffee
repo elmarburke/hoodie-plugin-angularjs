@@ -11,9 +11,6 @@ module.exports = (grunt) ->
         pushTo: "upstream"
 
     concat:
-      options:
-        banner: 'Hoodie.extend(function(hoodie) {\n'
-        footer: '\n});'
       dist: 
         src: ['src/**/*.js']
         dest: 'dist/<%= title %>.js'
