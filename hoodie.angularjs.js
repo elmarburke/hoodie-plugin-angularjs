@@ -81,8 +81,8 @@ function($rootScope, hoodie, $q) {
   this.username = hoodie.account.username;
 }]);
 
-hoodieModule.service('hoodieArray', ['$rootScope', 'hoodieStore',
-function($rootScope, hoodieStore) {
+hoodieModule.service('hoodieArray', ['$rootScope', 'hoodieStore', 'hoodie',
+function($rootScope, hoodieStore, hoodie) {
 
   this.bind = function ($scope, key, hoodieKey) {
 
