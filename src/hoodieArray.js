@@ -4,14 +4,16 @@ function($rootScope, hoodieStore) {
   this.bind = function ($scope, key, hoodieKey) {
 
     hoodieKey = hoodieKey || key;
+    $scope[key] = $scope[key] || [];
+
+    hoodieStore.findAll(hoodieKey)
+      .then(function (data) {
+        $scope[key] = data;
+      });
 
     $scope.$watch(key, function (newValue, oldValue) {
       if (newValue === oldValue || !angular.isArray(newValue) || !angular.isArray(oldValue)) {
         // Init
-        hoodieStore.findAll(hoodieKey)
-        .then(function (data) {
-          $scope[key] = data;
-        });
       } else {
 
         var delta = getDelta(oldValue, newValue, isEqual);

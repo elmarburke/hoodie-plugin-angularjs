@@ -6,12 +6,14 @@ function($rootScope, $q, hoodie) {
   angular.forEach([
     'add',
     'update',
+    'updateOrAdd',
     'find',
+    'findOrAdd',
     'findAll',
     'remove',
     'removeAll'
   ], function(fnName) {
-    service[fnName] = hoodiePromiseFnWrap(hoodie.store, 'add', $q, $rootScope);
+    service[fnName] = hoodiePromiseFnWrap(hoodie.store, fnName, $q, $rootScope);
   });
 
   service.findAll()
