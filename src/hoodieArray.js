@@ -16,7 +16,7 @@ function($rootScope, hoodieStore, hoodie) {
         // Init
       } else {
 
-        var delta = getDelta(oldValue, newValue, isEqual);
+        var delta = getDelta(oldValue, newValue, angular.equals);
         var item;
         var key;
 
@@ -73,10 +73,6 @@ function mapFromArray(array, prop) {
     map[ array[i][prop] ] = array[i];
   }
   return map;
-}
-
-function isEqual(a, b) {
-  return a.title === b.title && a.type === b.type;
 }
 
 /**
