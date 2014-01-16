@@ -1,5 +1,7 @@
 [Hoodie](http://hood.ie) [AngularJS](http://angularjs.org/) [Plugin](http://hood.ie/#plugins)
 ======================
+[![Dependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs.png)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs)
+[![devDependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs/dev-status.png)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs#info=devDependencies)
 
 Hoodie goes angular in a cozy way!
 
