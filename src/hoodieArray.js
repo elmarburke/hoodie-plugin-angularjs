@@ -1,4 +1,4 @@
-hoodieModule.service('hoodieArray', ['$rootScope', 'hoodieStore', 'hoodie',
+hoodieModule.service('hoodieArray',
 function($rootScope, hoodieStore, hoodie) {
 
   this.bind = function ($scope, key, hoodieKey) {
@@ -50,7 +50,7 @@ function($rootScope, hoodieStore, hoodie) {
 
 
   };
-}]);
+});
 
 function arrayObjectIndexOf(myArray, searchTerm, property) {
   for (var i = 0, len = myArray.length; i < len; i++) {

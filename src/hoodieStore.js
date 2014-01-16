@@ -1,5 +1,5 @@
 
-hoodieModule.service('hoodieStore', ['$rootScope', '$q', 'hoodie', 
+hoodieModule.service('hoodieStore',
 function($rootScope, $q, hoodie) {
   var service = this;
 
@@ -46,4 +46,4 @@ function($rootScope, $q, hoodie) {
     });
   });
 
-}]);
+});

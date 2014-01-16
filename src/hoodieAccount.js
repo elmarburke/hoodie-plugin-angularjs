@@ -1,5 +1,5 @@
 
-hoodieModule.service('hoodieAccount', ['$rootScope', 'hoodie', '$q',
+hoodieModule.service('hoodieAccount',
 function($rootScope, hoodie, $q) {
   var service = this;
 
@@ -37,4 +37,4 @@ function($rootScope, hoodie, $q) {
   });
 
   this.username = hoodie.account.username;
-}]);
+});
