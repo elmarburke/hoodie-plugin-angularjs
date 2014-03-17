@@ -60,7 +60,7 @@ Example:
 angular.module('worldDominationApp', ['hoodie'])
 
 .config(function(hoodieProvider) {
-  hoodieProivder.url('http://myhoodie.com/_api');
+  hoodieProvider.url('http://myhoodie.com/_api');
 })
 
 .controller('TodoCtrl', function ($scope, hoodieArray) {
