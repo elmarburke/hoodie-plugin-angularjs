@@ -97,10 +97,13 @@ function getDelta(o, n, comparator) {
     }
   }
 
-  for (id in mapN) {
-    if (!mapO.hasOwnProperty(id)) {
-      delta.added.push(mapN[id]);
+  // New attributes cannot be mapped by id as the id is undefined and
+  // there may be more than 1 new item
+  for (k in n) {
+    if (!n[k]['id']) { // new?
+      delta.added.push(n[k]);
     }
   }
+
   return delta;
 }
