@@ -39,7 +39,9 @@ function($rootScope, hoodieStore, hoodie) {
           // item is added, the first call to $watch will add the item and the
           // second call will remove this same item.
           if (item['id']) {
-            hoodieStore.remove(hoodieKey, item.id);
+            hoodieStore.remove(hoodieKey, item.id)
+            .then(function(data) {
+            });
           }
         }
 
