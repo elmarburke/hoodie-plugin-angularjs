@@ -35,7 +35,12 @@ function($rootScope, hoodieStore, hoodie) {
         // Last, lets delete items
         for (key in delta.deleted) {
           item = delta.deleted[key];
-          hoodieStore.remove(hoodieKey, item.id);
+          // Only delete the item if there isn't an id, otherwise when a new
+          // item is added, the first call to $watch will add the item and the
+          // second call will remove this same item.
+          if (item['id']) {
+            hoodieStore.remove(hoodieKey, item.id);
+          }
         }
 
       }
