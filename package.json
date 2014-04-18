@@ -1,7 +1,7 @@
 {
   "name": "hoodie-plugin-angularjs",
   "description": "Hoodie plugin to connect to angularJS",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "repository": {
     "type": "git",
     "url": "http://github.com:elmarburke/hoodie-plugin-angularjs.git"

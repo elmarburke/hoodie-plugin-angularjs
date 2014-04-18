@@ -4,33 +4,33 @@ module.exports = (grunt) ->
   grunt.initConfig(
     title: "hoodie.angularjs"
 
-    bump: 
-      options: 
+    bump:
+      options:
         commitMessage: "chore: release v%VERSION%"
         commitFiles: ['-a']
-        pushTo: "upstream"
+        pushTo: "origin"
 
     concat:
-      dist: 
+      dist:
         src: ['src/**/*.js']
         dest: 'dist/<%= title %>.js'
 
     shell:
       release:
-        options: 
+        options:
           stdout: true
         command: "mv <%= concat.dist.dest %> ./<%= title %>.js"
 
-     karma: 
+     karma:
        options:
          configFile: 'karma.conf.js'
-       continuous: 
+       continuous:
          singleRun: true
-       dev: 
+       dev:
          background: true
-     
-     watch: 
-       dev: 
+
+     watch:
+       dev:
          files: ['src/**/*.js', 'test/**/*.js']
          tasks: ['karma:dev:run']
 
@@ -45,4 +45,3 @@ module.exports = (grunt) ->
   grunt.registerTask "release", ['build', 'shell:release', 'bump']
 
   grunt.registerTask "default", "build"
-
