@@ -4,16 +4,14 @@ function($rootScope, hoodie, $q) {
   var service = this;
 
   //Wrap hoodie fns to turn hoodie promises into angular
-  angular.forEach([
-    'signUp',
-    'signIn',
-    'signOut',
-    'changePassword',
-    'changeUsername',
-    'resetPassword',
-    'destroy'
-  ], function(fnName) {
-    service[fnName] = hoodiePromiseFnWrap(hoodie.account, fnName, $q, $rootScope);
+  angular.forEach(hoodie.account, function(propertyValue, propertyName) {
+    if(angular.isFunction(propertyValue)){
+      service[propertyName] = hoodiePromiseFnWrap(hoodie.account, propertyName, $q, $rootScope);
+    }
+    else{
+      // TODO: Problem by value (copied, ref gets lost)
+      service[propertyName] = hoodie.account[propertyName];
+    }
   });
 
   // listen for account events
