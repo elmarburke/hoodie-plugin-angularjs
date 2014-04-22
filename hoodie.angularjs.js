@@ -38,16 +38,13 @@ hoodieModule.service('hoodieAccount', [
   function ($rootScope, hoodie, $q) {
     var service = this;
     //Wrap hoodie fns to turn hoodie promises into angular
-    angular.forEach([
-      'signUp',
-      'signIn',
-      'signOut',
-      'changePassword',
-      'changeUsername',
-      'resetPassword',
-      'destroy'
-    ], function (fnName) {
-      service[fnName] = hoodiePromiseFnWrap(hoodie.account, fnName, $q, $rootScope);
+    angular.forEach(hoodie.account, function (propertyValue, propertyName) {
+      if (angular.isFunction(propertyValue)) {
+        service[propertyName] = hoodiePromiseFnWrap(hoodie.account, propertyName, $q, $rootScope);
+      } else {
+        // TODO: Problem by value (copied, ref gets lost)
+        service[propertyName] = hoodie.account[propertyName];
+      }
     });
     // listen for account events
     angular.forEach([
@@ -165,7 +162,6 @@ function getDelta(o, n, comparator) {
   }
   return delta;
 }
-var HOODIE_URL_ERROR = 'No url for hoodie set! Please set the hoodie url using hoodieProvider. Example: \n  myApp.config(function(hoodieProvider) {\n    hoodieProvider.url(\'http://myapp.dev/_api\'); });  \n  });';
 hoodieModule.provider('hoodie', [function () {
     var hoodieUrl;
     this.url = function (url) {
@@ -174,9 +170,9 @@ hoodieModule.provider('hoodie', [function () {
       }
       return url;
     };
-    this.$get = function () {
+    this.$get = function ($location) {
       if (!hoodieUrl) {
-        throw new Error(HOODIE_URL_ERROR);
+        hoodieUrl = $location.absUrl().replace('/#' + $location.path(), '');
       }
       return new Hoodie(hoodieUrl);
     };
@@ -187,17 +183,13 @@ hoodieModule.service('hoodieStore', [
   'hoodie',
   function ($rootScope, $q, hoodie) {
     var service = this;
-    angular.forEach([
-      'add',
-      'update',
-      'updateOrAdd',
-      'find',
-      'findOrAdd',
-      'findAll',
-      'remove',
-      'removeAll'
-    ], function (fnName) {
-      service[fnName] = hoodiePromiseFnWrap(hoodie.store, fnName, $q, $rootScope);
+    angular.forEach(hoodie.store, function (propertyValue, propertyName) {
+      if (angular.isFunction(propertyValue)) {
+        service[propertyName] = hoodiePromiseFnWrap(hoodie.store, propertyName, $q, $rootScope);
+      } else {
+        // TODO: Problem by value (copied, ref gets lost)
+        service[propertyName] = hoodie.account[propertyName];
+      }
     });
     service.findAll().then(function (data) {
       data.forEach(function (item) {
