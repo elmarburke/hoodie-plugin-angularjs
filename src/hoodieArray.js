@@ -1,15 +1,23 @@
 hoodieModule.service('hoodieArray',
 function($rootScope, hoodieStore, hoodie) {
 
-  this.bind = function ($scope, key, hoodieKey) {
+  this.bind = function ($scope, key, hoodieKey, sortBy) {
+
+    function findAll() {
+      hoodieStore
+        .findAll(hoodieKey).then(function (data) {
+          if (sortBy) {
+            $scope[key] = data.sort(sortBy);
+          } else {
+            $scope[key] = data;
+          }
+        });
+    }
 
     hoodieKey = hoodieKey || key;
     $scope[key] = $scope[key] || [];
 
-    hoodieStore.findAll(hoodieKey)
-      .then(function (data) {
-        $scope[key] = data;
-      });
+    findAll();
 
     $scope.$watch(key, function (newValue, oldValue) {
       if (newValue === oldValue || !angular.isArray(newValue) || !angular.isArray(oldValue)) {
@@ -49,10 +57,7 @@ function($rootScope, hoodieStore, hoodie) {
     }, true);
 
     hoodie.store.on('change:' + hoodieKey, function (event, changedObject) {
-      hoodieStore.findAll(hoodieKey)
-      .then(function (data) {
-        $scope[key] = data;
-      });
+      findAll();
     });
 
 
