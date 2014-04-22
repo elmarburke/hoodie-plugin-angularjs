@@ -3,8 +3,14 @@ hoodieModule.service('hoodieStore',
 function($rootScope, $q, hoodie) {
   var service = this;
 
-  angular.forEach(angular.store, function(fn, fnName) {
-    service[fnName] = hoodiePromiseFnWrap(hoodie.store, fnName, $q, $rootScope);
+  angular.forEach(hoodie.store, function(propertyValue, propertyName) {
+    if(angular.isFunction(propertyValue)){
+      service[propertyName] = hoodiePromiseFnWrap(hoodie.store, propertyName, $q, $rootScope);
+    }
+    else{
+      // TODO: Problem by value (copied, ref gets lost)
+      service[propertyName] = hoodie.account[propertyName];
+    }
   });
 
   service.findAll()
