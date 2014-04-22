@@ -4,15 +4,7 @@ function($rootScope, hoodie, $q) {
   var service = this;
 
   //Wrap hoodie fns to turn hoodie promises into angular
-  angular.forEach([
-    'signUp',
-    'signIn',
-    'signOut',
-    'changePassword',
-    'changeUsername',
-    'resetPassword',
-    'destroy'
-  ], function(fnName) {
+  angular.forEach(angular.account, function(fn, fnName) {
     service[fnName] = hoodiePromiseFnWrap(hoodie.account, fnName, $q, $rootScope);
   });
 

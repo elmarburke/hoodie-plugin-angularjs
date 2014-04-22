@@ -3,16 +3,7 @@ hoodieModule.service('hoodieStore',
 function($rootScope, $q, hoodie) {
   var service = this;
 
-  angular.forEach([
-    'add',
-    'update',
-    'updateOrAdd',
-    'find',
-    'findOrAdd',
-    'findAll',
-    'remove',
-    'removeAll'
-  ], function(fnName) {
+  angular.forEach(angular.store, function(fn, fnName) {
     service[fnName] = hoodiePromiseFnWrap(hoodie.store, fnName, $q, $rootScope);
   });
 
