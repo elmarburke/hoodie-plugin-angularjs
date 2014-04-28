@@ -1,8 +1,9 @@
-
+// TODO: use factory
 hoodieModule.service('hoodieAccount',
 function($rootScope, hoodie, $q) {
   var service = this;
 
+  // TODO: May wrap this function for Account/Store to prevent copy/past errors
   //Wrap hoodie fns to turn hoodie promises into angular
   angular.forEach(hoodie.account, function(propertyValue, propertyName) {
     if(angular.isFunction(propertyValue)){
@@ -14,6 +15,7 @@ function($rootScope, hoodie, $q) {
     }
   });
 
+  // TODO: is there a 'ENUM' in hoodie for such events?
   // listen for account events
   angular.forEach([
     // user has signed up (this also triggers the authenticated event, see below)
@@ -34,5 +36,6 @@ function($rootScope, hoodie, $q) {
     });
   });
 
+  // TODO: String -> copied (no ref) !!
   this.username = hoodie.account.username;
 });

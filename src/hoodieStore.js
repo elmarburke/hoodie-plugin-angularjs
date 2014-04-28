@@ -1,6 +1,7 @@
-
+// TODO: factory would be also okay
 hoodieModule.service('hoodieStore',
 function($rootScope, $q, hoodie) {
+  // TODO: haha, you want to use fatory? :)
   var service = this;
 
   angular.forEach(hoodie.store, function(propertyValue, propertyName) {
@@ -13,6 +14,8 @@ function($rootScope, $q, hoodie) {
     }
   });
 
+  // TODO: Add Comment -> What happens here??
+  // If I'll create an store named findAll this will crash, ya??
   service.findAll()
   .then(function (data) {
     data.forEach(function (item) {
@@ -36,6 +39,7 @@ function($rootScope, $q, hoodie) {
       $rootScope.$emit(event + ':' + type + ':' + id, changedObject);
       $rootScope.$emit('change' + ':' + type + ':' + id, event, changedObject);
 
+      // TODO: Add Comment -> What happens here??
       service.findAll(type)
       .then(function (data) {
         service[type] = data;

@@ -1,4 +1,6 @@
+// TODO: factory would be also okay
 hoodieModule.service('hoodieArray',
+// TODO : unused variable $rootScope
 function($rootScope, hoodieStore, hoodie) {
 
   this.bind = function ($scope, key, hoodieKey) {
@@ -11,6 +13,7 @@ function($rootScope, hoodieStore, hoodie) {
         $scope[key] = data;
       });
 
+    // TODO: use $watchCollection
     $scope.$watch(key, function (newValue, oldValue) {
       if (newValue === oldValue || !angular.isArray(newValue) || !angular.isArray(oldValue)) {
         // Init
@@ -20,26 +23,31 @@ function($rootScope, hoodieStore, hoodie) {
         var item;
         var key;
 
+        // TODO: improve performance (jsperf for vs for each/in)
         // first, add new items
         for (key in delta.added) {
           item = delta.added[key];
           hoodieStore.add(hoodieKey, item);
         }
 
+        // TODO: improve performance (jsperf for vs for each/in)
         // then, the changed items
         for (key in delta.changed) {
           item = delta.changed[key];
           hoodieStore.update(hoodieKey, item.id, item);
         }
 
+        // TODO: improve performance (jsperf for vs for each/in)
         // Last, lets delete items
         for (key in delta.deleted) {
           item = delta.deleted[key];
           // Only delete the item if there isn't an id, otherwise when a new
           // item is added, the first call to $watch will add the item and the
           // second call will remove this same item.
+          // TODO: Danger! false ID values would be ignored e.g. id = 0
           if (item['id']) {
             hoodieStore.remove(hoodieKey, item.id)
+              // TODO: Why empty function?
             .then(function(data) {
             });
           }
@@ -48,6 +56,7 @@ function($rootScope, hoodieStore, hoodie) {
       }
     }, true);
 
+    // TODO: Why don't use hoodieStore.on?
     hoodie.store.on('change:' + hoodieKey, function (event, changedObject) {
       hoodieStore.findAll(hoodieKey)
       .then(function (data) {
@@ -59,6 +68,7 @@ function($rootScope, hoodieStore, hoodie) {
   };
 });
 
+// TODO: Unused function
 function arrayObjectIndexOf(myArray, searchTerm, property) {
   for (var i = 0, len = myArray.length; i < len; i++) {
     if (myArray[i][property] === searchTerm) return i;
