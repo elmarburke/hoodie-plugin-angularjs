@@ -1,6 +1,7 @@
 {
   "name": "hoodie-plugin-angularjs",
   "homepage": "https://github.com/elmarburke/hoodie-plugin-angularjs",
+  "version": "0.0.11",
   "private": false,
   "ignore": [
     "**/.*",
