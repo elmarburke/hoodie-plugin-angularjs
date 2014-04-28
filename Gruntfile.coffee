@@ -25,6 +25,7 @@ module.exports = (grunt) ->
        options:
          configFile: 'karma.conf.js'
        continuous:
+         browsers: ['PhantomJS']
          singleRun: true
        dev:
          background: true
