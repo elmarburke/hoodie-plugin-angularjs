@@ -69,14 +69,6 @@ function($rootScope, hoodieStore, hoodie) {
   };
 });
 
-// TODO: Unused function
-function arrayObjectIndexOf(myArray, searchTerm, property) {
-  for (var i = 0, len = myArray.length; i < len; i++) {
-    if (myArray[i][property] === searchTerm) return i;
-  }
-  return -1;
-}
-
 /**
  * Creates a map out of an array be choosing what property to key by
  * @param {object[]} array Array that will be converted into a map
