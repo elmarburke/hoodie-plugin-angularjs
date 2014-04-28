@@ -19,6 +19,7 @@ A little bit about the plugin.
 ```
 
 Load the `hoodie` module into angular and initialize hoodie.
+Note: If you don't specify any url hoodie-angular will just fall back to the current URL.
 
 ```js
 angular.module('worldDominationApp', ['hoodie'])
@@ -60,7 +61,7 @@ Example:
 ```js
 angular.module('worldDominationApp', ['hoodie'])
   .config(function(hoodieProvider) {
-    hoodieProvider.url('http://myhoodie.com/_api');
+    hoodieProvider.url('http://myhoodie.com/');
   })
   .controller('TodoCtrl', function ($scope, hoodieArray) {
 
