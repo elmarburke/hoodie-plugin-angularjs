@@ -11,15 +11,13 @@ A little bit about the plugin.
 
 `$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** hoodie.
 
-Initialize hoodie and load the plugin into angular. add the module name `hoodie` to your module array. Example:
+Load the `hoodie` module into angular and initialize hoodie.
 
 ```js
-// Init Hoodie
-var hoodie  = new Hoodie()
-window.hoodie = hoodie;
-
-// Init Angular
 angular.module('worldDominationApp', ['hoodie'])
+  .config(function(hoodieProvider) {
+    hoodieProvider.url('http://myhoodie.com/');
+  });
 ```
 
 ## Services
@@ -54,27 +52,25 @@ Example:
 
 ```js
 angular.module('worldDominationApp', ['hoodie'])
+  .config(function(hoodieProvider) {
+    hoodieProvider.url('http://myhoodie.com/_api');
+  })
+  .controller('TodoCtrl', function ($scope, hoodieArray) {
 
-.config(function(hoodieProvider) {
-  hoodieProvider.url('http://myhoodie.com/_api');
-})
+    $scope.delete = function(item) {
+      var idx = $scope.todos.indexOf(item);
+      $scope.todos.splice(idx, 1);
+    };
 
-.controller('TodoCtrl', function ($scope, hoodieArray) {
+    $scope.add = function (title) {
+      $scope.todos.push({
+        title: title
+      });
+      $scope.newTodo = '';
+    }
 
-  $scope.delete = function(item) {
-    var idx = $scope.todos.indexOf(item);
-    $scope.todos.splice(idx, 1);
-  };
-
-  $scope.add = function (title) {
-    $scope.todos.push({
-      title: title
-    });
-    $scope.newTodo = '';
-  }
-
-  hoodieArray.bind($scope, 'todos', 'todo');
-});
+    hoodieArray.bind($scope, 'todos', 'todo');
+  });
 ```
 
 # Development
