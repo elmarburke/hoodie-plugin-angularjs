@@ -88,7 +88,9 @@ Run `grunt dev` to start the karma test server and run test continuously on ever
 
 ### Build & Release Process
 
-Run `grunt release`, which will do the following;
-- `grunt build` to concat the source files and wrap them in Hoodie.extend()
-- Move built file from `dist` to project root , using `grunt shell:release`.  We keep the concatenated file in dist by default so it cannot be accidentally commited.
-- Use `grunt bump` to commit, tag, and publish
+Run `grunt release` to prepare the built plugin for distribution.
+
+Internally it does the following:
+- Concat the source files and wrap them in Hoodie.extend()
+- Move the built file from `dist` to the project root. (We keep the concatenated file in dist by default so it cannot be accidentally commited)
+- Commit, tag, and Push
