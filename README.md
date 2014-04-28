@@ -9,7 +9,14 @@ A little bit about the plugin.
 
 ## Install
 
-`$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** hoodie.
+`$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** the hoodie-plugin.
+
+```html
+<script src="jquery.js"></script>
+<script src="hoodie.js"></script>
+<script src="angular.js"></script>
+<script src="hoodie-plugin-angularjs.js"></script>
+```
 
 Load the `hoodie` module into angular and initialize hoodie.
 
