@@ -73,15 +73,18 @@ angular.module('worldDominationApp', ['hoodie'])
   });
 ```
 
-# Development
+## Development
 
-We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test, with [bower](http://bower.io) to install test dependencies.  To setup your development environment:
+We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test.
 
-- `grunt`
-- `npm install`
-- `bower install`
+Install the development dependencies.
+```shell
+npm install
+bower install
+```
 
-Then, run `grunt` to build and test.  Run `grunt dev` to start the test server and test every save.
+Run `grunt` to build and test once.
+Run `grunt dev` to start the karma test server and run test continuously on every save.
 
 ### Build & Release Process
 
