@@ -2,6 +2,7 @@
 ======================
 [![Dependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs.png)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs)
 [![devDependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs/dev-status.png)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs#info=devDependencies)
+[![Build Status](https://travis-ci.org/elmarburke/hoodie-plugin-angularjs.svg?branch=master)](https://travis-ci.org/elmarburke/hoodie-plugin-angularjs)
 
 Hoodie goes angular in a cozy way!
 
@@ -90,7 +91,7 @@ We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.gith
 - `npm install`
 - `bower install`
 
-Then, run `grunt` to build and test.  Run `grunt dev` to start the test server and test every save.  
+Then, run `grunt` to build and test.  Run `grunt dev` to start the test server and test every save.
 
 ### Build & Release Process
 
