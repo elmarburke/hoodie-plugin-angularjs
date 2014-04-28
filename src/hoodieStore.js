@@ -6,7 +6,9 @@ function($rootScope, $q, hoodie) {
 
   angular.forEach(hoodie.store, function(propertyValue, propertyName) {
     if(angular.isFunction(propertyValue)){
-      service[propertyName] = hoodiePromiseFnWrap(hoodie.store, propertyName, $q, $rootScope);
+      service[propertyName] = function () {
+        return $q.when(hoodie.store[propertyName].apply(hoodie.account, arguments));
+      };
     }
     else{
       // TODO: Problem by value (copied, ref gets lost)

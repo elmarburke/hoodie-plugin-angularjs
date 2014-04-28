@@ -25,20 +25,3 @@ function hoodieEventWrap(hoodieInstance, eventName, $rootScope,  fn) {
     $rootScope.$emit('hoodie:' + eventName, eventData);
   }));
 }
-
-
-// TODO: We should use $q.when
-//Takes a hoodie function that returns a promise, and returns a function
-//that will call the hoodie function, then take that hoodie promise and
-//instead return a $q-promise and $apply when it returns
-function hoodiePromiseFnWrap(context, fnName, $q, $rootScope) {
-  return function() {
-    var args = arguments;
-    var deferred = $q.defer();
-    context[fnName].apply(context, args).then(
-      angularDigestFn($rootScope, deferred.resolve),
-      angularDigestFn($rootScope, deferred.reject)
-    );
-    return deferred.promise;
-  };
-}

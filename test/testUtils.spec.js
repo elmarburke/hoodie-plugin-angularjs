@@ -14,6 +14,8 @@ describe('utils', function() {
 
   });
 
+  /*
+  Now $q.when is used
   describe('hoodiePromiseFnWrap', function() {
 
     var myObject, successSpy, errorSpy, myWrappedFn;
@@ -61,7 +63,7 @@ describe('utils', function() {
       expect(errorSpy).toHaveBeenCalledWith('error');
     }));
 
-  });
+  });*/
 
 
   describe('hoodieEventWrap', function() {
