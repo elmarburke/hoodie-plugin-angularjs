@@ -1,5 +1,5 @@
 angular.module('hoodie')
-  .provider('hoodie', [function () {
+  .provider('hoodie', function () {
     var hoodieUrl;
     this.url = function (url) {
       if (arguments.length) {
@@ -15,4 +15,4 @@ angular.module('hoodie')
       return new Hoodie(hoodieUrl);
     };
 
-  }]);
+  });
