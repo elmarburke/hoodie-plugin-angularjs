@@ -1,5 +1,4 @@
-[Hoodie](http://hood.ie) [AngularJS](http://angularjs.org/) [Plugin](http://hood.ie/#plugins)
-======================
+# [Hoodie](http://hood.ie) [AngularJS](http://angularjs.org/) [Plugin](http://hood.ie/#plugins)
 [![devDependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs/dev-status.svg)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs#info=devDependencies)
 
 Hoodie goes angular in a cozy way!
@@ -8,8 +7,7 @@ A lot is missing, but the good news are: you can [contribute](https://github.com
 
 A little bit about the plugin.
 
-Install
--------
+## Install
 
 `$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** hoodie.
 
@@ -24,8 +22,7 @@ window.hoodie = hoodie;
 angular.module('worldDominationApp', ['hoodie'])
 ```
 
-Services
---------
+## Services
 
 There are currently four services. hoodie, hoodieAccount, hoodieStore and hoodieArray.
 
@@ -80,8 +77,7 @@ angular.module('worldDominationApp', ['hoodie'])
 });
 ```
 
-Development
------------
+# Development
 
 We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test, with [bower](http://bower.io) to install test dependencies.  To setup your development environment:
 
@@ -97,4 +93,3 @@ Run `grunt release`, which will do the following;
 - `grunt build` to concat the source files and wrap them in Hoodie.extend()
 - Move built file from `dist` to project root , using `grunt shell:release`.  We keep the concatenated file in dist by default so it cannot be accidentally commited.
 - Use `grunt bump` to commit, tag, and publish
-
