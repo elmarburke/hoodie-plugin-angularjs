@@ -1,9 +1,8 @@
 // TODO: factory would be also okay
 angular.module('hoodie')
-  .service('hoodieStore',
+  .factory('hoodieStore',
 function($rootScope, $q, hoodie) {
-  // TODO: haha, you want to use fatory? :)
-  var service = this;
+  var service = {};
 
   angular.forEach(hoodie.store, function(propertyValue, propertyName) {
     if(angular.isFunction(propertyValue)){
@@ -50,4 +49,5 @@ function($rootScope, $q, hoodie) {
     });
   });
 
+  return service;
 });

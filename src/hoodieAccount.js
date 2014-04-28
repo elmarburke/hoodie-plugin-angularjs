@@ -1,8 +1,7 @@
-// TODO: use factory
 angular.module('hoodie')
-  .service('hoodieAccount',
+  .factory('hoodieAccount',
   function ($rootScope, hoodie, $q) {
-    var service = this;
+    var service = {};
 
     // TODO: May wrap this function for Account/Store to prevent copy/past errors
     //Wrap hoodie fns to turn hoodie promises into angular
@@ -40,5 +39,8 @@ angular.module('hoodie')
     });
 
     // TODO: String -> copied (no ref) !!
-    this.username = hoodie.account.username;
+    service.username = hoodie.account.username;
+
+
+    return service;
   });

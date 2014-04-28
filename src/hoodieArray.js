@@ -1,10 +1,11 @@
 // TODO: factory would be also okay
 angular.module('hoodie')
-  .service('hoodieArray',
-// TODO : unused variable $rootScope
-function($rootScope, hoodieStore, hoodie) {
+  .factory('hoodieArray',
+function(hoodieStore, hoodie) {
 
-  this.bind = function ($scope, key, hoodieKey) {
+  var service = {};
+
+  service.bind =  function($scope, key, hoodieKey) {
 
     hoodieKey = hoodieKey || key;
     $scope[key] = $scope[key] || [];
@@ -64,8 +65,11 @@ function($rootScope, hoodieStore, hoodie) {
         $scope[key] = data;
       });
     });
+  };
 
-
+  // Public API
+  return {
+    bind: service.bind
   };
 });
 
