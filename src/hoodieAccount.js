@@ -1,5 +1,6 @@
 // TODO: use factory
-hoodieModule.service('hoodieAccount',
+angular.module('hoodie')
+  .service('hoodieAccount',
   function ($rootScope, hoodie, $q) {
     var service = this;
 

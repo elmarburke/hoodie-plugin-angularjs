@@ -1,5 +1,4 @@
-// TODO: No need of a global variable why pollute global scope?
-var hoodieModule = angular.module('hoodie', []);
+angular.module('hoodie', []);
 
 // TODO: Not sure if we should wrap this
 //Takes a callback that takes a single argument,

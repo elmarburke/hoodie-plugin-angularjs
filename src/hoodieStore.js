@@ -1,5 +1,6 @@
 // TODO: factory would be also okay
-hoodieModule.service('hoodieStore',
+angular.module('hoodie')
+  .service('hoodieStore',
 function($rootScope, $q, hoodie) {
   // TODO: haha, you want to use fatory? :)
   var service = this;

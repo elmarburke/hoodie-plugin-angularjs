@@ -1,5 +1,6 @@
 // TODO: factory would be also okay
-hoodieModule.service('hoodieArray',
+angular.module('hoodie')
+  .service('hoodieArray',
 // TODO : unused variable $rootScope
 function($rootScope, hoodieStore, hoodie) {
 

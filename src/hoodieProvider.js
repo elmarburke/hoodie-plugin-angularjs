@@ -1,4 +1,5 @@
-hoodieModule.provider('hoodie', [function() {
+angular.module('hoodie')
+  .provider('hoodie', [function() {
   var hoodieUrl;
   this.url = function(url) {
     if (arguments.length) {
