@@ -33,8 +33,12 @@ angular.module('hoodie')
       // but Hoodie cannot sync remotely, so the user must sign in again
       'unauthenticated'
     ], function (eventName) {
-      hoodieEventWrap(hoodie.account, eventName, $rootScope, function (username) {
-        service.username = username;
+
+      hoodie.account.on(eventName, function (username) {
+        $rootScope.$apply(function () {
+          service.username = username;
+        });
+        $rootScope.$emit('hoodie:' + eventName, arguments);
       });
     });
 

@@ -37,6 +37,7 @@
     "waitsFor": false,
     "$httpBackend": false,
     "jQuery": false,
-    "alert": false
+    "alert": false,
+    "Hoodie": false
   }
 }
