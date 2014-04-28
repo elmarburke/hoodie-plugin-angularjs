@@ -2,6 +2,15 @@
   "name": "hoodie-plugin-angularjs",
   "homepage": "https://github.com/elmarburke/hoodie-plugin-angularjs",
   "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "src",
+    "karma.conf.js",
+    "Gruntfile.coffee"
+  ],
   "dependencies": {
     "angular": "1.2.5"
   },
