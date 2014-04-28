@@ -33,15 +33,16 @@ module.exports = (grunt) ->
      watch:
        dev:
          files: ['src/**/*.js', 'test/**/*.js']
-         tasks: ['karma:dev:run']
+         tasks: ['build', 'karma:dev:run']
 
      ngmin:
        module:
          src: ['dist/<%= title %>.js']
          dest: 'dist/<%= title %>.js'
 
-  grunt.registerTask 'build', ['concat', 'ngmin', 'karma:continuous']
-  grunt.registerTask 'dev', ['karma:dev:start', 'watch']
-  grunt.registerTask 'release', ['build', 'shell:release', 'bump']
+  grunt.registerTask 'build', ['concat', 'ngmin', ]
+  grunt.registerTask 'test', ['build', 'karma:continuous']
+  grunt.registerTask 'dev', ['karma:dev', 'watch']
+  grunt.registerTask 'release', ['test', 'shell:release', 'bump']
 
-  grunt.registerTask 'default', 'build'
+  grunt.registerTask 'default', 'test'

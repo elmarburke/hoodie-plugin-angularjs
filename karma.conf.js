@@ -16,7 +16,7 @@ module.exports = function(config) {
       'bower_components/hoodie/dist/hoodie.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'src/**/*.js',
+      'dist/hoodie.angularjs.js',
       'test/**/*.js'
     ],
 
