@@ -1,6 +1,6 @@
 angular.module('hoodie')
   .factory('hoodieArray',
-  function (hoodieStore, hoodie) {
+  function (hoodieStore) {
 
     var service = {};
 
@@ -55,7 +55,7 @@ angular.module('hoodie')
       }, true);
 
       // TODO: Why don't use hoodieStore.on?
-      hoodie.store.on('change:' + hoodieKey, function () {
+      hoodieStore.on('change:' + hoodieKey, function () {
         hoodieStore.findAll(hoodieKey)
           .then(function (data) {
             $scope[key] = data;
