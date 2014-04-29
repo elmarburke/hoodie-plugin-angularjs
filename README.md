@@ -1,7 +1,5 @@
-[Hoodie](http://hood.ie) [AngularJS](http://angularjs.org/) [Plugin](http://hood.ie/#plugins)
-======================
-[![Dependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs.png)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs)
-[![devDependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs/dev-status.png)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs#info=devDependencies)
+# [Hoodie](http://hood.ie) [AngularJS](http://angularjs.org/) [Plugin](http://hood.ie/#plugins)
+[![devDependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs/dev-status.svg)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs#info=devDependencies)
 [![Build Status](https://travis-ci.org/elmarburke/hoodie-plugin-angularjs.svg?branch=master)](https://travis-ci.org/elmarburke/hoodie-plugin-angularjs)
 
 Hoodie goes angular in a cozy way!
@@ -10,24 +8,28 @@ A lot is missing, but the good news are: you can [contribute](https://github.com
 
 A little bit about the plugin.
 
-Install
--------
+## Install
 
-`$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** hoodie.
+`$ hoodie install angularjs` in your project folder will install the plugin. You need to load angular **BEFORE** the hoodie-plugin.
 
-Initialize hoodie and load the plugin into angular. add the module name `hoodie` to your module array. Example:
-
-```js
-// Init Hoodie
-var hoodie  = new Hoodie()
-window.hoodie = hoodie;
-
-// Init Angular
-angular.module('worldDominationApp', ['hoodie'])
+```html
+<script src="jquery.js"></script>
+<script src="hoodie.js"></script>
+<script src="angular.js"></script>
+<script src="hoodie-plugin-angularjs.js"></script>
 ```
 
-Services
---------
+Load the `hoodie` module into angular and initialize hoodie.
+Note: If you don't specify any url hoodie-angular will just fall back to the current URL.
+
+```js
+angular.module('worldDominationApp', ['hoodie'])
+  .config(function(hoodieProvider) {
+    hoodieProvider.url('http://myhoodie.com/');
+  });
+```
+
+## Services
 
 There are currently four services. hoodie, hoodieAccount, hoodieStore and hoodieArray.
 
@@ -59,44 +61,45 @@ Example:
 
 ```js
 angular.module('worldDominationApp', ['hoodie'])
+  .config(function(hoodieProvider) {
+    hoodieProvider.url('http://myhoodie.com/');
+  })
+  .controller('TodoCtrl', function ($scope, hoodieArray) {
 
-.config(function(hoodieProvider) {
-  hoodieProvider.url('http://myhoodie.com/_api');
-})
+    $scope.delete = function(item) {
+      var idx = $scope.todos.indexOf(item);
+      $scope.todos.splice(idx, 1);
+    };
 
-.controller('TodoCtrl', function ($scope, hoodieArray) {
+    $scope.add = function (title) {
+      $scope.todos.push({
+        title: title
+      });
+      $scope.newTodo = '';
+    }
 
-  $scope.delete = function(item) {
-    var idx = $scope.todos.indexOf(item);
-    $scope.todos.splice(idx, 1);
-  };
-
-  $scope.add = function (title) {
-    $scope.todos.push({
-      title: title
-    });
-    $scope.newTodo = '';
-  }
-
-  hoodieArray.bind($scope, 'todos', 'todo');
-});
+    hoodieArray.bind($scope, 'todos', 'todo');
+  });
 ```
 
-Development
------------
+## Development
 
-We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test, with [bower](http://bower.io) to install test dependencies.  To setup your development environment:
+We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test.
 
-- `grunt`
-- `npm install`
-- `bower install`
+Install the development dependencies.
+```shell
+npm install
+bower install
+```
 
-Then, run `grunt` to build and test.  Run `grunt dev` to start the test server and test every save.
+Run `grunt` to build and test once.
+Run `grunt dev` to start the karma test server and run test continuously on every save.
 
 ### Build & Release Process
 
-Run `grunt release`, which will do the following;
-- `grunt build` to concat the source files and wrap them in Hoodie.extend()
-- Move built file from `dist` to project root , using `grunt shell:release`.  We keep the concatenated file in dist by default so it cannot be accidentally commited.
-- Use `grunt bump` to commit, tag, and publish
+Run `grunt release` to prepare the built plugin for distribution.
 
+Internally it does the following:
+- Concat the source files and wrap them in Hoodie.extend()
+- Move the built file from `dist` to the project root. (We keep the concatenated file in dist by default so it cannot be accidentally commited)
+- Commit, tag, and Push
