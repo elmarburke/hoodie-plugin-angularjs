@@ -1,6 +1,7 @@
 # [Hoodie](http://hood.ie) [AngularJS](http://angularjs.org/) [Plugin](http://hood.ie/#plugins)
 [![devDependency Status](https://david-dm.org/elmarburke/hoodie-plugin-angularjs/dev-status.svg)](https://david-dm.org/elmarburke/hoodie-plugin-angularjs#info=devDependencies)
 [![Build Status](https://travis-ci.org/elmarburke/hoodie-plugin-angularjs.svg?branch=master)](https://travis-ci.org/elmarburke/hoodie-plugin-angularjs)
+[![Coverage Status](https://coveralls.io/repos/elmarburke/hoodie-plugin-angularjs/badge.png)](https://coveralls.io/r/elmarburke/hoodie-plugin-angularjs)
 
 Hoodie goes angular in a cozy way!
 
