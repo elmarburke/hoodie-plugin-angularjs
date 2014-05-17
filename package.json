@@ -3,7 +3,7 @@
   "description": "Hoodie plugin to connect to angularJS",
   "version": "0.0.11",
   "scripts": {
-    "test": "grunt"
+    "test": "gulp karma"
   },
   "repository": {
     "type": "git",
@@ -13,19 +13,19 @@
     "hoodie.angularjs.js"
   ],
   "devDependencies": {
-    "grunt": "^0.4.2",
-    "grunt-bump": "0.0.13",
-    "grunt-contrib-concat": "^0.4.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-karma": "^0.8.3",
-    "grunt-ngmin": "0.0.3",
-    "grunt-shell": "^0.7.0",
-    "load-grunt-tasks": "^0.4.0",
     "karma": "^0.12.14",
     "karma-chrome-launcher": "^0.1.1",
     "karma-coverage": "^0.2.1",
     "karma-jasmine": "^0.1.4",
     "karma-phantomjs-launcher": "^0.1.1",
-    "karma-script-launcher": "^0.1.0"
+    "karma-script-launcher": "^0.1.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-header": "^1.0.2",
+    "gulp-footer": "^1.0.4",
+    "gulp": "^3.6.2",
+    "gulp-ngmin": "^0.3.0",
+    "gulp-jshint": "^1.6.1",
+    "lodash.assign": "^2.4.1",
+    "jshint-summary": "^0.3.0"
   }
 }

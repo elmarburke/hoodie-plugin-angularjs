@@ -3,8 +3,8 @@
   "homepage": "https://github.com/elmarburke/hoodie-plugin-angularjs",
   "private": true,
   "devDependencies": {
-    "angular-mocks": "1.2.5",
-    "angular": "1.2.5",
+    "angular-mocks": "^1.2.x",
+    "angular": "^1.2.x",
     "hoodie": "~0.8.2",
     "jquery": "~2.1"
   }
