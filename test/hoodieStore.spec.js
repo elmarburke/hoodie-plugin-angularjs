@@ -8,16 +8,20 @@ describe('hoodieStore', function () {
     hoodieApi = (new Hoodie()),
     api = hoodieApi.store;
 
-  beforeEach(module('hoodie', function($provide){
-    $provide.value('hoodie',hoodieApi);
-    spyOn(hoodieApi.store,'on');
+  beforeEach(module('hoodie', function ($provide) {
+    $provide.value('hoodie', hoodieApi);
+    spyOn(hoodieApi.store, 'on');
+    spyOn(hoodieApi.store, 'findAll').andReturn([
+      { type: 'foo', value: '33' },
+      { type: 'bar', value: '34' },
+      { type: 'foo', value: '35' }
+    ]);
   }));
   beforeEach(inject(function (_$rootScope_, _hoodieStore_, _hoodie_, _$q_) {
     $rootScope = _$rootScope_;
     hoodie = _hoodie_;
     hoodieStore = _hoodieStore_;
     $q = _$q_;
-
   }));
 
   it('should have hoodieStore', function () {
@@ -25,21 +29,15 @@ describe('hoodieStore', function () {
   });
 
   it('should have all hoodie.store functions', function () {
-    angular.forEach([api], function (fnName) {
-      if (typeof api[fnName] === 'function') {
-        expect(hoodieStore[fnName]).toBeDefined();
-        expect(typeof hoodieStore[fnName]).toBe('function');
-        expect(window.hoodiePromiseFnWrap).toHaveBeenCalled();
-        expect(window.hoodiePromiseFnWrap).toHaveBeenCalledWith(hoodieStore, fnName, $q, $rootScope);
+    angular.forEach(api, function (fnName) {
+      if (typeof fnName === 'function' && fnName.name.length > 0) {
+        expect(hoodieStore[fnName.name]).toBeDefined();
+        expect(typeof hoodieStore[fnName.name]).toBe('function');
       }
-      else{
+      else {
         expect(hoodieStore[fnName]).toBe(hoodieApi.store[fnName]);
       }
     });
-  });
-
-  describe('findAll', function(){
-    it('should call ')
   });
 
   describe('on change function', function () {
@@ -118,5 +116,55 @@ describe('hoodieStore', function () {
 
 
   });
+
+  describe('initial findAll', function () {
+
+    beforeEach(inject(function (hoodie, $q) {
+      //Return some random mock data from findAll to test against
+
+    }));
+
+    it('should set initial data from results', inject(function (hoodieStore, $rootScope) {
+      //hoodieStore is now initialized because we just injected it
+      //$apply so .then() fires
+      $rootScope.$apply();
+      expect(hoodieStore.foo).toEqual([
+        {type: 'foo', value: '33'},
+        {type: 'foo', value: '35'}
+      ]);
+      expect(hoodieStore.bar).toEqual([
+        {type: 'bar', value: '34'}
+      ]);
+    }));
+
+  });
+
+  describe('events', function () {
+
+    it('should listen for change on start and set service data on change', inject(function (hoodieStore, hoodie, $rootScope, $q) {
+      //hoodieStore is now initialized because we just injected it
+      expect(hoodie.store.on)
+        .toHaveBeenCalledWith('change', jasmine.any(Function));
+
+      var changeFn = hoodie.store.on.mostRecentCall.args[1];
+      var newFindAllData = { some: 'data' };
+      spyOn(hoodieStore, 'findAll').andReturn($q.when(newFindAllData));
+      spyOn($rootScope, '$emit');
+
+      var data = { type: 'add', id: '123' };
+      changeFn('event', data);
+      $rootScope.$apply(); //make evalAsync happen
+
+      //Should fetch changed data type and set it to service
+      expect(hoodieStore.findAll).toHaveBeenCalledWith(data.type);
+      $rootScope.$apply();
+      expect(hoodieStore[data.type]).toBe(newFindAllData);
+
+      expect($rootScope.$emit).toHaveBeenCalledWith('event', data);
+      //Not going to expect every rootScope.$emit, too fragile and
+      //one PR mentioned changing them.
+    }));
+  });
+
 
 });
