@@ -85,22 +85,21 @@ angular.module('worldDominationApp', ['hoodie'])
 
 ## Development
 
-We use [grunt](http://gruntjs.com) to build and [karma](http://karma-runner.github.io) to test.
+We use [gulp](http://gulpjs.com) to build and [karma](http://karma-runner.github.io) to test.
 
 Install the development dependencies.
+
 ```shell
 npm install
 bower install
 ```
 
-Run `grunt` to build and test once.
-Run `grunt dev` to start the karma test server and run test continuously on every save.
+- `gulp` to build, test, and jshint once.
+- `gulp build` to build to dist
+- `gulp jshint` to run jshint
+- `gulp karma` to run karma tests once
+- `gulp karma-watch` to run karma tests and re-run on change
 
 ### Build & Release Process
 
-Run `grunt release` to prepare the built plugin for distribution.
-
-Internally it does the following:
-- Concat the source files and wrap them in Hoodie.extend()
-- Move the built file from `dist` to the project root. (We keep the concatenated file in dist by default so it cannot be accidentally commited)
-- Commit, tag, and Push
+Before releasing, copy the release file from `dist` to the project root.
