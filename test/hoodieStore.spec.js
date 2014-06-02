@@ -8,16 +8,6 @@ describe('hoodieStore', function () {
     hoodieApi = (new Hoodie()),
     api = hoodieApi.store;
 
-  beforeEach(function () {
-    spyOn(window, 'hoodiePromiseFnWrap')
-      .andReturn(function () {
-        return {
-          then: function () {
-          }
-        };
-      });
-    spyOn(window, 'hoodieEventWrap');
-  });
   beforeEach(module('hoodie', function($provide){
     $provide.value('hoodie',hoodieApi);
     spyOn(hoodieApi.store,'on');
