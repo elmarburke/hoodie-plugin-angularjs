@@ -9,7 +9,7 @@ function($rootScope, $q, hoodie) {
     }
     else{
       // TODO: Problem by value (copied, ref gets lost)
-      service[propertyName] = hoodie.account[propertyName];
+      service[propertyName] = hoodie.store[propertyName];
     }
   });
 
