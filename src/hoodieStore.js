@@ -1,17 +1,16 @@
-
-hoodieModule.service('hoodieStore',
-function($rootScope, $q, hoodie) {
+hoodieModule.service('hoodieStore', function($rootScope, $q, hoodie) {
   var service = this;
 
-  angular.forEach(hoodie.store, function(propertyValue, propertyName) {
-    if(angular.isFunction(propertyValue)){
-      service[propertyName] = hoodiePromiseFnWrap(hoodie.store, propertyName, $q, $rootScope);
-    }
-    else{
-      // TODO: Problem by value (copied, ref gets lost)
-      service[propertyName] = hoodie.account[propertyName];
-    }
-  });
+  function wrapMethod(methodName) {
+    service[methodName] = function() {
+      return $q.when(hoodie.store[methodName].apply(hoodie.store, arguments));
+    };
+  }
+
+  service.STORE_PROMISE_METHODS = [
+    'add', 'update', 'find', 'findAll', 'remove', 'removeAll'
+  ];
+  service.STORE_PROMISE_METHODS.forEach(wrapMethod);
 
   service.findAll()
   .then(function (data) {
@@ -29,18 +28,18 @@ function($rootScope, $q, hoodie) {
       var type = changedObject.type;
       var id = changedObject.id;
 
-      $rootScope.$emit(event, changedObject);
-      $rootScope.$emit('change', event, changedObject);
-      $rootScope.$emit(event + ':' + type, changedObject);
-      $rootScope.$emit('change' + ':' + type, event, changedObject);
-      $rootScope.$emit(event + ':' + type + ':' + id, changedObject);
-      $rootScope.$emit('change' + ':' + type + ':' + id, event, changedObject);
-
-      service.findAll(type)
-      .then(function (data) {
+      //Copy the change over to the service
+      service.findAll(type).then(function (data) {
         service[type] = data;
+
+        //TODO change somehow?
+        $rootScope.$emit(event, changedObject);
+        $rootScope.$emit('change', event, changedObject);
+        $rootScope.$emit(event + ':' + type, changedObject);
+        $rootScope.$emit('change' + ':' + type, event, changedObject);
+        $rootScope.$emit(event + ':' + type + ':' + id, changedObject);
+        $rootScope.$emit('change' + ':' + type + ':' + id, event, changedObject);
       });
     });
   });
-
 });
