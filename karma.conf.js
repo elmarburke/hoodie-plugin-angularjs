@@ -28,7 +28,7 @@ module.exports = function(config) {
     reporters: ['progress', 'coverage'],
 
     preprocessors: {
-      'dist/*.js': ['coverage']
+      'src/**/*.js': ['coverage']
     },
 
     coverageReporter: {
