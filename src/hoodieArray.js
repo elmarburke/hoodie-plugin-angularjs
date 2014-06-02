@@ -14,7 +14,6 @@ angular.module('hoodie')
           $scope[key] = data;
         });
 
-      // TODO: use $watchCollection
       $scope.$watch(key, function (newValue, oldValue) {
         if (newValue === oldValue || !angular.isArray(newValue) || !angular.isArray(oldValue)) {
           // Init
@@ -24,21 +23,18 @@ angular.module('hoodie')
           var item;
           var key;
 
-          // TODO: improve performance (jsperf for vs for each/in)
           // first, add new items
           for (key in delta.added) {
             item = delta.added[key];
             hoodieStore.add(hoodieKey, item);
           }
 
-          // TODO: improve performance (jsperf for vs for each/in)
           // then, the changed items
           for (key in delta.changed) {
             item = delta.changed[key];
             hoodieStore.update(hoodieKey, item.id, item);
           }
 
-          // TODO: improve performance (jsperf for vs for each/in)
           // Last, lets delete items
           for (key in delta.deleted) {
             item = delta.deleted[key];
@@ -54,7 +50,6 @@ angular.module('hoodie')
         }
       }, true);
 
-      // TODO: Why don't use hoodieStore.on?
       hoodieStore.on('change:' + hoodieKey, function () {
         hoodieStore.findAll(hoodieKey)
           .then(function (data) {

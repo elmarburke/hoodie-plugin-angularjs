@@ -3,7 +3,6 @@ angular.module('hoodie')
   function ($rootScope, hoodie, $q) {
     var service = {};
 
-    // TODO: May wrap this function for Account/Store to prevent copy/past errors
     //Wrap hoodie fns to turn hoodie promises into angular
     angular.forEach(hoodie.account, function (propertyValue, propertyName) {
       if (angular.isFunction(propertyValue)) {
@@ -42,7 +41,6 @@ angular.module('hoodie')
       });
     });
 
-    // TODO: String -> copied (no ref) !!
     service.username = hoodie.account.username;
 
 
