@@ -45,6 +45,4 @@ describe('hoodieAccount', function () {
 
     });
   });
-
-  console.warn('TODO: Testing events are missing');
-})
+});
