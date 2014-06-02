@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Tue Dec 17 2013 09:35:11 GMT-0500 (EST)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
@@ -16,7 +16,7 @@ module.exports = function(config) {
       'bower_components/hoodie/dist/hoodie.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'dist/hoodie.angularjs.js',
+      'src/**/*.js',
       'test/**/*.js'
     ],
 
@@ -32,8 +32,8 @@ module.exports = function(config) {
     },
 
     coverageReporter: {
-      type : 'lcov',
-      dir : 'coverage/'
+      type: 'lcov',
+      dir: 'coverage/'
     },
 
     // web server port
