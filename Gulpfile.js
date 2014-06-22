@@ -47,35 +47,35 @@ gulp.task('karma:dev', function () {
 
 
 gulp.task('bump-major', function () {
-  gulp.src(['./bower.json','./package.json'])
+  return gulp.src(['./bower.json','./package.json'])
     .pipe(bump({type: 'major'}))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump', function () {
-  gulp.src(['./bower.json','./package.json'])
+  return gulp.src(['./bower.json','./package.json'])
     .pipe(bump())
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump-minor', function () {
-  gulp.src(['./bower.json','./package.json'])
+  return gulp.src(['./bower.json','./package.json'])
     .pipe(bump({type: 'minor'}))
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('tag', ['bump', 'default'], function () {
+gulp.task('tag', ['bump'], function () {
   return gulp.src('./bower.json')
     .pipe(shell([
       //'node write-changelog.js',
       'git commit -am \'chore(release): v' + require('./bower.json').version + '\'',
       'git tag -a v' + require('./bower.json').version + ' -m \'v' + require('./bower.json').version + '\'',
-      'git push origin master'
+      'git push origin master --tags'
     ]));
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['Gulpfile.js', paths.src, paths.test], ['jshint', 'test']);
+  return gulp.watch(['Gulpfile.js', paths.src, paths.test], ['jshint', 'test']);
 });
 
 // Tasks
