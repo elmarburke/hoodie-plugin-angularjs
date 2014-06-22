@@ -6,7 +6,7 @@ angular.module('hoodie')
     angular.forEach(hoodie.store, function (propertyValue, propertyName) {
       if (angular.isFunction(propertyValue)) {
         service[propertyName] = function () {
-          return $q.when(hoodie.store[propertyName].apply(hoodie.account, arguments));
+          return $q.when(hoodie.store[propertyName].apply(hoodie.store, arguments));
         };
       }
       else {
