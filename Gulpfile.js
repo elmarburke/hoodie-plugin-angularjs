@@ -47,24 +47,24 @@ gulp.task('karma:dev', function () {
 
 
 gulp.task('bump-major', function () {
-  return gulp.src(['./bower.json','./package.json'])
+  return gulp.src(['./bower.json', './package.json'])
     .pipe(bump({type: 'major'}))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump', function () {
-  return gulp.src(['./bower.json','./package.json'])
+  return gulp.src(['./bower.json', './package.json'])
     .pipe(bump())
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump-minor', function () {
-  return gulp.src(['./bower.json','./package.json'])
+  return gulp.src(['./bower.json', './package.json'])
     .pipe(bump({type: 'minor'}))
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('tag', ['bump'], function () {
+gulp.task('tag', ['build', 'bump'], function () {
   return gulp.src('./bower.json')
     .pipe(shell([
       //'node write-changelog.js',
