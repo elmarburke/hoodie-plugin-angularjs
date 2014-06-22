@@ -1,7 +1,7 @@
 {
   "name": "hoodie-plugin-angularjs",
   "homepage": "https://github.com/elmarburke/hoodie-plugin-angularjs",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "This is an AnguarJS Module to provide easy access to the hoodie functions via DI and offer some additional helpers",
   "keywords": [
     "hoodie",
