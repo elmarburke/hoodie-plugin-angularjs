@@ -27,7 +27,10 @@ angular.module('hoodie').factory('hoodieAccount', [
     ], function (eventName) {
       hoodie.account.on(eventName, function (username) {
         $rootScope.$apply(function () {
-          service.username = username;
+          if(eventName === 'signout')
+            service.username = null;
+          else
+            service.username = username;
         });
         $rootScope.$emit('hoodie:' + eventName, arguments);
       });
