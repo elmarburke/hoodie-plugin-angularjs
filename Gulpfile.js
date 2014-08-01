@@ -12,7 +12,15 @@ var componentName = 'hoodie.angularjs';
 var paths = {
   dist: './',
   src: 'src/**/*.js',
-  test: 'test/specs/**/*.js'
+  test: 'test/**/*.js',
+  testfiles: [
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/hoodie/dist/hoodie.js',
+    'bower_components/angular/angular.js',
+    'bower_components/angular-mocks/angular-mocks.js',
+    'src/**/*.js',
+    'test/**/*.js'
+  ]
 };
 
 gulp.task('clean', function () {
@@ -37,7 +45,7 @@ gulp.task('scripts', [], function () {
 });
 
 gulp.task('karma:dev', function () {
-  return gulp.src(paths.test)
+  return gulp.src(paths.testfiles)
     .pipe(karma({
       configFile: 'karma.conf.js',
       singleRun: true,
