@@ -83,6 +83,33 @@ angular.module('worldDominationApp', ['hoodie'])
   });
 ```
 
+### `hoodieObject`
+
+Add `hoodieObject` to your di-array. With the bind method you could bind an object to your hoodie store.
+
+#### `hoodieObject.bind(store, id)`
+
+* **store**: the place were the item is saved.
+* **id**: the items id you want to bind to.
+
+Returns an object with the item you selected from hoodie.
+
+Example: 
+
+```js
+angular.module('worldDominationApp', ['hoodie'])
+  .config(function(hoodieProvider) {
+    hoodieProvider.url('http://myhoodie.com/');
+  })
+  .controller('TodoCtrl', function ($scope, hoodieObject) {
+
+    $scope.secretSuperpower = hoodieObject.bind('superpower', '12ffID');
+    // $scope.secretSuperpower contains now an object with the hoodie object with the id 12ffID
+    // it is two way bounded with hoodie
+  });
+```
+
+
 ## Development
 
 We use [gulp](http://gulpjs.com) to build and [karma](http://karma-runner.github.io) to test.
