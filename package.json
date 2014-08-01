@@ -3,7 +3,7 @@
   "description": "Hoodie plugin to connect to angularJS",
   "version": "0.0.17",
   "scripts": {
-    "test": "grunt"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
