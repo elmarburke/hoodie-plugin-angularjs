@@ -12,3 +12,6 @@ notifications:
 env:
   global:
     secure: Au0/vNIbzhQqGysv8T1De6oVOvJ/awKtL8VyvVxiKKPPnOjOeZ2JWfxTkW7/RHEgddZxZgVTe5HbeRdKwhvkQfMjX3rad1JMxK06akQyuWOn1G6bSPk9K7DvGlVANUSPzfZ+zwAkhL/TGeMMZ/H8D7yo7yRfspVQHu35Z/YHeWE=
+
+after_success:
+- gulp coveralls

@@ -6,7 +6,8 @@ var gulp = require('gulp'),
   karma = require('gulp-karma'),
   bump = require('gulp-bump'),
   shell = require('gulp-shell'),
-  ngmin = require('gulp-ngmin');
+  ngmin = require('gulp-ngmin'),
+  coveralls = require('gulp-coveralls');
 
 var componentName = 'hoodie.angularjs';
 var paths = {
@@ -53,6 +54,12 @@ gulp.task('karma:dev', function () {
     }));
 });
 
+// This is only for coveralls.io and get called by travis
+// Thanks @boennemann for the support!
+gulp.task('coveralls', function() {
+  return gulp.src('test/coverage/**/lcov.info')
+    .pipe(coveralls());
+});
 
 gulp.task('bump-major', function () {
   return gulp.src(['./bower.json', './package.json'])

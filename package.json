@@ -17,6 +17,7 @@
     "gulp-bump": "^0.1.10",
     "gulp-clean": "^0.2.4",
     "gulp-concat": "^2.2.0",
+    "gulp-coveralls": "^0.1.2",
     "gulp-jshint": "^1.5.5",
     "gulp-karma": "0.0.4",
     "gulp-ngmin": "^0.2.0",
