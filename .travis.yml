@@ -1,11 +1,14 @@
 language: node_js
 node_js:
-  - '0.10'
+- '0.10'
 before_script:
-  - npm install -g bower gulp
-  - bower install
+- npm install -g bower gulp
+- bower install
 cache:
   directories:
-    - node_modules
+  - node_modules
 notifications:
   email: false
+env:
+  global:
+    secure: Au0/vNIbzhQqGysv8T1De6oVOvJ/awKtL8VyvVxiKKPPnOjOeZ2JWfxTkW7/RHEgddZxZgVTe5HbeRdKwhvkQfMjX3rad1JMxK06akQyuWOn1G6bSPk9K7DvGlVANUSPzfZ+zwAkhL/TGeMMZ/H8D7yo7yRfspVQHu35Z/YHeWE=
