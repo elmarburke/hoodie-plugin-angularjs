@@ -40,12 +40,30 @@ describe('hoodieAccount', function () {
       'authenticated',
       'unauthenticated'
     ];
+    expect(api.on).toHaveBeenCalled();
+    expect(api.on.calls.length).toBe(events.length);
     angular.forEach(events, function (eventName) {
-      expect(api.on).toHaveBeenCalled();
-      expect(api.on.calls.length).toBe(events.length);
-      // TODO: Need one or two fresh eyes for this (hopefully little typo/bug)
-      //expect(window.hoodieEventWrap).toHaveBeenCalledWith(api, eventName, $rootScope, jasmine.any(Function));
-
+      expect(api.on).toHaveBeenCalledWith(eventName, jasmine.any(Function));
     });
   });
+
+  it('should set username on signup', function() {
+    var username = 'testusername';
+    api.trigger('signup', username);
+    expect(api.username).toBe(username);
+  });
+
+  it('should set username on signin', function() {
+    var username = 'testusername';
+    api.trigger('signin', username);
+    expect(api.username).toBe(username);
+  });
+
+  it('should set username on signout', function() {
+    var username = 'testusername';
+    api.trigger('signin', username);
+    expect(api.username).toBe(username);
+    api.trigger('signout', username);
+    expect(api.username).toBeUndefined();
+  });  
 });
