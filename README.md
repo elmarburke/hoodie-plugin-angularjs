@@ -15,9 +15,8 @@ A little bit about the plugin.
 
 ```html
 <script src="jquery.js"></script>
-<script src="hoodie.js"></script>
 <script src="angular.js"></script>
-<script src="hoodie-plugin-angularjs.js"></script>
+<script src="/_api/_files/hoodie.js"></script>
 ```
 
 Load the `hoodie` module into angular and initialize hoodie.
