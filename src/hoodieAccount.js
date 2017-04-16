@@ -23,8 +23,6 @@ angular.module('hoodie')
       'signup',
       // user has signed in (this also triggers the authenticated event, see below)
       'signin',
-      // user has signed out
-      'signout',
       // user has re-authenticated after their session timed out
       // (this does _not_ trigger the signin event)
       'authenticated',
@@ -35,7 +33,7 @@ angular.module('hoodie')
 
       hoodie.account.on(eventName, function (username) {
         $rootScope.$apply(function () {
-          service.username = username;
+	  service.username = eventName === 'signout' ? undefined : username;
         });
         $rootScope.$emit('hoodie:' + eventName, arguments);
       });
